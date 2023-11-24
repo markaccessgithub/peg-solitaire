@@ -1,0 +1,92 @@
+import json
+def find(board,choice):
+    for i in range(0, len(board)):
+        for j in range(0, len(board[0])):
+            if choice == board[i][j]:
+                return i, j
+num = 97
+lChoice = int(input("How long should the grid be?: "))
+wChoice = int(input("How wide should the grid be?: "))
+grid = []
+for i in range(lChoice):
+    grid.append([])
+for i in range(lChoice):
+    for j in range(wChoice):
+        if num != 98:
+            grid[i].append(chr(num))
+            num+=1
+        else:
+            grid[i].append(" ")
+            num+=1
+
+
+print(grid)
+
+
+found = False
+while True and found == False:
+    for i in range(lChoice):
+        print(" ".join(grid[i]))
+    choice = input("Enter a letter: ")
+    if choice.lower() == "save":
+        with open("game.txt", "w") as f:
+            save = json.dumps(grid)
+            f.write(save)
+            print("Game saved")
+    elif choice.lower() == "load":
+        with open("game.txt", "r") as f:
+            save = f.read()
+            grid = json.loads(save)
+            print("Game loaded")
+    else:
+     direction = input("Enter a direction (u,d,l,r): ")
+     direction = direction.lower()
+
+
+
+
+     row, column = find(grid, choice)
+
+
+
+
+     if direction == "r" and column + 2 < len(grid[0]) and grid[row][column+1] != " ":
+        if grid[row][column + 2] == " ":
+            grid[row][column] = " "
+            grid[row][column + 1] = " "
+            grid[row][column + 2] = choice
+
+
+
+
+     if direction == "l" and column - 2 >= 0 and grid[row][column - 1] != " ":
+        if grid[row][column - 2] == " ":
+            grid[row][column] = " "
+            grid[row][column - 1] = " "
+            grid[row][column - 2] = choice
+
+
+
+
+     if direction == "u" and row - 2 >= 0 and grid[row - 1][column] != " ":
+        if grid[row - 2][column] == " ":
+            grid[row][column] = " "
+            grid[row - 1][column] = " "
+            grid[row - 2][column] = choice
+
+
+
+
+     if direction == "d" and row + 2 < len(grid) and grid[row + 1][column] != " ":
+        if grid[row + 2][column] == " ":
+            grid[row][column] = " "
+            grid[row + 1][column] = " "
+            grid[row + 2][column] = choice
+     total = 0
+     for i in range(lChoice):
+        for j in range(wChoice):
+            if grid[i][j] != " ":
+                total +=1
+     if total == 1:
+         found = True
+print("You won!") 
